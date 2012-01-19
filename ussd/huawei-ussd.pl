@@ -37,14 +37,15 @@ print "PDU ENCODED: $ussd_req\n" if $opt_v;
 
 my $ussd_reply;
 if (! $opt_n) {
-    open (SENDPORT, '+<', $opt_s) or print STDOUT "Can't open '$opt_s': $!\n";
+    open (SENDPORT, '+<', $opt_s) or {print STDOUT "Can't open '$opt_s': $!\n"; die "Can't open '$opt_s': $!\n";}
     print SENDPORT 'AT+CUSD=1,',$ussd_req,",15\r\n";
     close SENDPORT;
-    open (RCVPORT, $opt_r) or print STDOUT "Can't open '$opt_r': $!\n";
+    open (RCVPORT, $opt_r) or {print STDOUT "Can't open '$opt_r': $!\n"; die "Can't open '$opt_r': $!\n";}
     print "Waiting for USSD reply...\n" if $opt_v;
     while (<RCVPORT>) {
         chomp;
-        die "USSD ERROR\n" if $_ eq "+CUSD: 2";
+        if ($_ eq "+CUSD: 2" )
+            {print STDOUT "USSD ERROR\n"; die "USSD ERROR\n"; }
         if (/^\+CUSD: 0,\"([A-F0-9]+)\"/) {
             $ussd_reply = $1;
             print "PDU USSD REPLY: $ussd_reply\n" if $opt_v;
@@ -60,5 +61,5 @@ if ($ussd_reply) {
 }
 else
 {
-    print "No USSD reply!\n";
+    print STDOUT "No USSD reply!\n";
 }

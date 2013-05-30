@@ -3,4 +3,9 @@ ussd-sender
 A bash/zenity script as a GUI wrapper for huawei-ussd.pl, a perl script to send USSD code to 3G modems to check balance, recharge prepaid account etc...
 The perl script and perl library dependency ( perl-gsm ) is included. You can run the GUI directly without installing this lib.
 
+Please check if you're are member of the dialout group. If not:
+```
+sudo adduser YOUR_USER dialout
+```
+and log out and log in back to continue.
 License: GPL-v3
